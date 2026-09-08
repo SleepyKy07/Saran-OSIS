@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kotak Saran Digital OSIS
 
-## Getting Started
+Website kritik & saran anonim untuk siswa. Satu akun Google hanya bisa mengirim **1 kali**.
+Identitas siswa **tidak ditampilkan** kepada admin OSIS.
 
-First, run the development server:
+## Cara anonim 1x kirim bekerja
+
+- Siswa login dengan **akun Google** (Gmail apa saja, tombol "Masuk dengan Google").
+- ID akun Google (`sub`) disimpan sebagai **hash satu arah (HMAC-SHA256)** di tabel `students` yang
+  **terpisah tanpa relasi** ke tabel `suggestions`. Email mentah tidak disimpan.
+- Saat kirim, server dalam **satu transaksi**: cek `is_used=false` → simpan kritik
+  (tanpa identitas apa pun) → tandai `is_used=true`.
+- Admin hanya melihat: ID acak, isi, prioritas, tanggal, status.
+- Tidak ada nama, NIS, email, kelas, nomor HP, atau IP di halaman/API admin.
+
+## Syarat
+
+- Node.js 20+
+- Database PostgreSQL (lokal, Neon, atau Supabase)
+- OAuth Client Google (Client ID + Secret) dari Google Cloud Console
+
+## Jalankan lokal
 
 ```bash
+npm install
+# isi .env (lihat .env.example): DATABASE_URL + 3 secret + GOOGLE_CLIENT_ID/SECRET
+# redirect URI Google: http://localhost:3000/api/auth/callback/google
+npx prisma migrate dev
+npm run db:seed
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Halaman siswa: `/`
+- Privasi & anonimitas: `/privasi`
+- Login admin: `/admin/login` (default `admin` / `admin123`, ganti setelah login)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Akun siswa dibuat otomatis saat pertama kali login Google (1 akun = 1 jatah).
 
-## Learn More
+## Logo sekolah & OSIS
 
-To learn more about Next.js, take a look at the following resources:
+Taruh file berikut di folder `public/` (nama persis, huruf kecil):
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `logo-sekolah.png` (atau `.jpg`) — logo sekolah, tampil di kiri header
+- `logo-osis.png` (atau `.jpg`) — logo OSIS, tampil di kanan header
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Tidak perlu ubah kode atau rebuild — cukup refresh halaman. Kalau file belum
+ada, header otomatis menampilkan kotak inisial sebagai pengganti.
+Nama sekolah diatur via `NEXT_PUBLIC_SCHOOL_NAME` di `.env`
+(ubah lalu restart `npm run dev` / rebuild agar terbaca).
 
-## Deploy on Vercel
+## Acara berikutnya: reset jatah & arsip
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Setiap akun punya **kode akun** (`AK-XXXXXX`) yang terlihat oleh pemiliknya
+  setelah login. Kode ini dipakai untuk reset jatah tanpa membuka email.
+- Dashboard admin → **Kelola Akun**: tabel kode + status jatah, tombol **Reset**
+  per akun, dan **Reset semua jatah** untuk periode/acara baru.
+- Dashboard admin → tab **Aktif / Riwayat**: arsipkan kritik per item,
+  **Arsipkan yang SELESAI**, atau **Arsipkan semua**. Yang diarsip tetap bisa
+  dibaca di tab Riwayat dan tidak mengganggu statistik aktif.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploy online (Vercel + Neon, gratis)
+
+1. Buat database Postgres gratis di Neon/Supabase, salin `DATABASE_URL`.
+2. Buat OAuth Client di Google Cloud Console, tambahkan redirect URI produksi:
+   `https://domain-kamu/api/auth/callback/google`.
+3. Push project ke GitHub, import di Vercel.
+4. Isi Environment Variables di Vercel:
+   `DATABASE_URL`, `NIS_HASH_SECRET`, `SISWA_SESSION_SECRET`,
+   `ADMIN_SESSION_SECRET` (masing-masing 64 hex acak), `NEXT_PUBLIC_SCHOOL_NAME`,
+   `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, plus variabel `ADMIN_*` untuk seed awal.
+5. Generate secret: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
+6. Setelah deploy: jalankan migrate + seed sekali via Vercel CLI atau lokal dengan
+   `DATABASE_URL` produksi:
+   ```bash
+   npx prisma migrate deploy
+   npm run db:seed
+   ```
+7. Vercel otomatis menyediakan **HTTPS**. Ganti password admin setelah seed.
+
+## Keamanan
+
+- Password admin di-hash **bcrypt**; ID akun Google di-hash HMAC-SHA256.
+- Sesi memakai **JWT httpOnly cookie** (siswa & admin terpisah), `Secure` aktif di produksi.
+- Validasi **Zod di backend**, sanitasi HTML untuk cegah XSS, Prisma cegah SQL injection.
+- Rate limiting login & pengiriman, penolakan isi yang memuat email/nomor/URL identitas.
+- State CSRF (`oauth_state` httpOnly, 10 menit) untuk alur OAuth Google.
+- Security headers (nosniff, DENY frame, referrer policy).

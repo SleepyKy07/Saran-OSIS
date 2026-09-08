@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Identitas siswa (login Google). Disimpan sebagai hash satu arah (HMAC-SHA256
+// dari Google `sub`) yang TERPISAH tanpa relasi/foreign key ke kritik mana pun,
+// sehingga admin tidak bisa menelusuri pengirim. 1 akun Google = 1 jatah kirim.
+model Student {
+  id            String    @id @default(cuid())
+  googleSubHash String    @unique
+  // Kode acak yang ditunjukkan ke pemilik akun agar bisa minta reset jatah
+  // ke admin tanpa membuka identitas (email tidak disimpan di mana pun).
+  displayCode   String?   @unique
+  isUsed        Boolean   @default(false)
+  usedAt        DateTime?
+  createdAt     DateTime  @default(now())
+
+  @@map("students")
+}
+
+// Isi kritik/saran anonim. TIDAK menyimpan nama, NIS, email, kelas,
+// nomor HP, IP address, atau identitas lain dalam bentuk apa pun.
+model Suggestion {
+  id         String   @id @default(cuid())
+  publicId   String   @unique
+  message    String   @db.Text
+  priority   Priority @default(BIASA)
+  status     Status   @default(BARU)
+  isFlagged  Boolean  @default(false)
+  // Arsip/riwayat: tetap bisa dibaca di tab Arsip, tidak mengganggu dashboard Aktif.
+  archived   Boolean   @default(false)
+  archivedAt DateTime?
+  createdAt  DateTime @default(now())
+
+  @@index([status])
+  @@index([priority])
+  @@map("suggestions")
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  @@map("admins")
+}
+
+enum Priority {
+  BIASA
+  PENTING
+  SANGAT_PENTING
+}
+
+enum Status {
+  BARU
+  DIBACA
+  DIPROSES
+  SELESAI
+}
