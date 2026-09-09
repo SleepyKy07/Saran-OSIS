@@ -4,12 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
+    "postinstall": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
-    "db:set-super": "tsx scripts/set-super.ts",
-    "postinstall": "prisma skills sync || exit 0"
+    "db:set-super": "tsx scripts/set-super.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
