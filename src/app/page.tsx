@@ -116,26 +116,26 @@ export default function SiswaPage() {
         }
       />
 
-      <main className="relative mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:px-6 sm:py-12">
+      <main className="relative mx-auto w-full max-w-3xl flex-1 px-3.5 py-5 sm:px-6 sm:py-10">
         <ConfettiBlob className="-z-0" />
 
         {/* Hero */}
         <div className="relative z-10 text-center">
-          <span className="animate-wiggle inline-block text-5xl sm:text-6xl" aria-hidden="true">🗳️</span>
-          <h1 className="mt-3 font-[family-name:var(--font-play)] text-4xl font-extrabold leading-tight tracking-tight text-slate-800 sm:text-5xl">
+          <span className="animate-wiggle inline-block text-4xl sm:text-6xl" aria-hidden="true">🗳️</span>
+          <h1 className="mt-2 font-[family-name:var(--font-play)] text-2xl font-extrabold leading-snug tracking-tight text-slate-800 sm:text-4xl md:text-5xl">
             Kotak Saran <span className="text-gradient-play">Digital OSIS</span>
           </h1>
-          <p className="mx-auto mt-3 max-w-xl text-base font-medium text-slate-600 sm:text-lg">
+          <p className="mx-auto mt-2 max-w-xl text-sm font-medium text-slate-600 sm:text-base">
             Suaramu penting! Sampaikan kritik &amp; saran secara <b>anonim</b> — bantu OSIS membuat sekolah makin seru dan lebih baik. 🚀
           </p>
         </div>
 
         {/* Cara pakai */}
-        <Card className="relative z-10 mt-6 border-amber-200/70 bg-gradient-to-br from-amber-50/90 to-orange-50/80">
-          <h2 className="font-[family-name:var(--font-play)] text-lg font-bold text-amber-800">
+        <Card className="relative z-10 mt-4 sm:mt-6 border-amber-200/70 bg-gradient-to-br from-amber-50/90 to-orange-50/80 p-4 sm:p-6">
+          <h2 className="font-[family-name:var(--font-play)] text-base sm:text-lg font-bold text-amber-800">
             📌 Cara pakai — baca dulu ya!
           </h2>
-          <ul className="mt-3 space-y-2.5 text-sm text-slate-700">
+          <ul className="mt-2.5 space-y-2 text-xs sm:text-sm text-slate-700">
             <Step n="1" text="Kritik/saran bersifat anonim: OSIS tidak melihat siapa pengirimnya." />
             <Step n="2" text="Jangan menulis nama, kelas, nomor HP, atau info pribadi di isi kritik." />
             <Step n="3" text="Setiap akun Google hanya punya 1 kesempatan mengirim. Masuk dengan akun Google (Gmail apa saja)." />
@@ -156,46 +156,46 @@ export default function SiswaPage() {
         )}
 
         {phase === "login" && (
-          <Card className="relative z-10 mt-6 border-sky-200/60">
+          <Card className="relative z-10 mt-4 sm:mt-6 border-sky-200/60 p-5 sm:p-6">
             <div className="flex flex-col items-center gap-1 text-center">
-              <span className="text-4xl" aria-hidden="true">👋</span>
-              <h2 className="font-[family-name:var(--font-play)] text-2xl font-extrabold text-slate-800">
+              <span className="text-3xl sm:text-4xl" aria-hidden="true">👋</span>
+              <h2 className="font-[family-name:var(--font-play)] text-xl sm:text-2xl font-extrabold text-slate-800">
                 Halo, kawan OSIS!
               </h2>
-              <p className="mt-1 max-w-md text-sm text-slate-600">
+              <p className="mt-1 max-w-md text-xs sm:text-sm text-slate-600">
                 Masuk dengan akun Google untuk memulai. Akun hanya dipakai memastikan jatah <b>1x kirim</b> — email tidak disimpan bersama kritikmu.
               </p>
             </div>
             <a
               href="/api/auth/google"
-              className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-2xl bg-white px-4 py-3.5 text-[15px] font-bold text-slate-700 shadow-md ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99]"
+              className="mt-4 sm:mt-5 flex min-h-[46px] w-full items-center justify-center gap-2.5 rounded-2xl bg-white px-4 py-3 text-sm sm:text-[15px] font-bold text-slate-700 shadow-md ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99]"
             >
               <GoogleG />
               Masuk dengan Google
             </a>
-            <p className="mt-3 text-center text-xs font-semibold text-slate-400">
+            <p className="mt-2.5 text-center text-[11px] sm:text-xs font-semibold text-slate-400">
               1 akun Google = 1 kesempatan mengirim 🙌
             </p>
           </Card>
         )}
 
         {phase === "form" && (
-          <Card className="relative z-10 mt-6 border-emerald-200/60">
-            <div className="flex flex-wrap items-start justify-between gap-2">
-              <h2 className="font-[family-name:var(--font-play)] text-xl font-extrabold text-slate-800">
+          <Card className="relative z-10 mt-4 sm:mt-6 border-emerald-200/60 p-4 sm:p-6">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="font-[family-name:var(--font-play)] text-lg sm:text-xl font-extrabold text-slate-800">
                 Tulis kritik &amp; saranmu ✍️
               </h2>
               {displayCode && (
-                <span className="rounded-full bg-emerald-100 px-3 py-1 font-mono text-xs font-bold text-emerald-700">
+                <span className="rounded-full bg-emerald-100 px-2.5 py-1 font-mono text-[11px] sm:text-xs font-bold text-emerald-700">
                   🎟️ Kode: {displayCode}
                 </span>
               )}
             </div>
-            <form onSubmit={onSend} className="mt-4 space-y-4">
+            <form onSubmit={onSend} className="mt-3.5 space-y-3.5 sm:space-y-4">
               <div>
                 <FieldLabel>Kritik/saran (min. 10 karakter)</FieldLabel>
                 <textarea
-                  className={`${inputCls} min-h-36 resize-y`}
+                  className={`${inputCls} min-h-32 sm:min-h-36 resize-y text-sm`}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Tulis masukanmu di sini tanpa nama/kelas/nomor HP… 💬"

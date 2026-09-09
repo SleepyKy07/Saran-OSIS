@@ -10,27 +10,27 @@ import { OsisLogo, SchoolLogo } from "./school-logo";
 export function SiteHeader({ right }: { right?: ReactNode }) {
   return (
     <header className="relative z-10 border-b border-white/60 bg-white/70 backdrop-blur-md">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3.5 sm:px-6">
-        <Link href="/" className="group flex items-center gap-3">
-          <SchoolLogo />
-          <span>
-            <span className="block text-[11px] font-bold uppercase tracking-widest text-amber-600">
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-3 py-2.5 sm:px-6 sm:py-3.5">
+        <Link href="/" className="group flex min-w-0 items-center gap-2 sm:gap-3">
+          <SchoolLogo className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0" />
+          <span className="min-w-0">
+            <span className="hidden sm:block text-[10px] font-bold uppercase tracking-widest text-amber-600 truncate">
               {SCHOOL_NAME}
             </span>
-            <span className="block text-base font-extrabold leading-tight text-slate-800">
+            <span className="block text-sm sm:text-base font-extrabold leading-tight text-slate-800 truncate">
               Kotak Saran <span className="text-emerald-600">OSIS</span>
             </span>
           </span>
         </Link>
-        <nav className="flex items-center gap-1.5 text-sm">
+        <nav className="flex items-center gap-1.5 text-xs sm:text-sm flex-shrink-0">
           {right}
-          <div className="flex items-center gap-2 pl-1">
-            <OsisLogo />
-            <span className="leading-tight">
+          <div className="flex items-center gap-1.5 pl-1 border-l border-slate-200 ml-1">
+            <OsisLogo className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0" />
+            <span className="hidden sm:block leading-tight">
               <span className="block text-xs font-extrabold uppercase tracking-wide text-slate-800">
                 OSIS
               </span>
-              <span className="hidden text-[10px] font-bold uppercase tracking-wider text-amber-600 sm:block">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600">
                 {SCHOOL_NAME}
               </span>
             </span>

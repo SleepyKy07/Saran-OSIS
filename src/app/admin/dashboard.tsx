@@ -124,43 +124,43 @@ export default function AdminDashboard({ name, isSuper }: { name: string; isSupe
 
   return (
     <div className="admin-bg min-h-full text-slate-100">
-      <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-900/70 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3.5 sm:px-6">
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 p-1.5 ring-1 ring-white/15">
+      <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-900/80 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2.5 px-3.5 py-3 sm:px-6 sm:py-3.5">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <span className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-2xl bg-white/10 p-1.5 ring-1 ring-white/15">
               <SchoolLogo className="h-full w-full" />
             </span>
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-widest text-emerald-300">
+              <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-emerald-300">
                 Dashboard OSIS
               </p>
-              <h1 className="text-lg font-extrabold leading-tight">
+              <h1 className="text-base sm:text-lg font-extrabold leading-tight">
                 Kotak Saran <span className="text-gradient-ocean">Masuk</span>
               </h1>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="hidden items-center gap-2 rounded-full bg-white/5 px-3 py-1.5 text-slate-200 ring-1 ring-white/10 sm:flex">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
+            <span className="hidden items-center gap-2 rounded-full bg-white/5 px-3 py-1.5 text-slate-200 ring-1 ring-white/10 md:flex">
               <span className="h-2 w-2 rounded-full bg-emerald-400" />
               {name}
             </span>
             {isSuper && (
               <Link
                 href="/admin/kelola"
-                className="rounded-xl bg-violet-500 px-3.5 py-2 font-bold text-white shadow-lg shadow-violet-900/40 transition hover:bg-violet-400"
+                className="rounded-xl bg-violet-500 px-2.5 sm:px-3.5 py-1.5 sm:py-2 font-bold text-white shadow-lg shadow-violet-900/40 transition hover:bg-violet-400"
               >
-                👑 Kelola Admin
+                👑 Kelola
               </Link>
             )}
             <Link
               href="/admin/akun"
-              className="rounded-xl bg-emerald-500 px-3.5 py-2 font-bold text-white shadow-lg shadow-emerald-900/40 transition hover:bg-emerald-400"
+              className="rounded-xl bg-emerald-500 px-2.5 sm:px-3.5 py-1.5 sm:py-2 font-bold text-white shadow-lg shadow-emerald-900/40 transition hover:bg-emerald-400"
             >
-              ⚙️ Kelola Akun
+              ⚙️ Akun
             </Link>
             <button
               onClick={logout}
-              className="rounded-xl bg-white/10 px-3.5 py-2 font-semibold ring-1 ring-white/10 transition hover:bg-white/20"
+              className="rounded-xl bg-white/10 px-2.5 sm:px-3.5 py-1.5 sm:py-2 font-semibold ring-1 ring-white/10 transition hover:bg-white/20"
             >
               Keluar
             </button>
