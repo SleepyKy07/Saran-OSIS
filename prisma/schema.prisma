@@ -47,6 +47,8 @@ model Admin {
   username     String   @unique
   name         String
   passwordHash String
+  // Admin "super" = satu-satunya yang boleh mengelola akun admin lain.
+  isSuper      Boolean  @default(false)
   createdAt    DateTime @default(now())
 
   @@map("admins")

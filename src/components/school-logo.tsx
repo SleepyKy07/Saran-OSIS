@@ -41,7 +41,7 @@ export function SchoolLogo({ className }: { className?: string }) {
       alt="Logo sekolah"
       className={className}
       fallback={
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-lg font-bold text-white">
+        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-lg font-extrabold text-white shadow-md shadow-emerald-200">
           {SCHOOL_NAME.charAt(0)}
         </span>
       }
@@ -56,7 +56,7 @@ export function OsisLogo({ className }: { className?: string }) {
       alt="Logo OSIS"
       className={className}
       fallback={
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500 text-lg font-bold text-white">
+        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-lg font-extrabold text-white shadow-md shadow-amber-200">
           O
         </span>
       }

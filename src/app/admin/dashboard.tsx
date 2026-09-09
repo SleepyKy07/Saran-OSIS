@@ -4,14 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { Alert } from "@/components/ui";
-import { OsisLogo, SchoolLogo } from "@/components/school-logo";
-import { PRIORITIES, STATUSES, priorityLabel, statusLabel } from "@/lib/constants";
+import { SchoolLogo } from "@/components/school-logo";
+import { STATUSES, statusLabel } from "@/lib/constants";
 
 type Item = {
   id: string;
   publicId: string;
   message: string;
-  priority: string;
   status: string;
   isFlagged: boolean;
   archived: boolean;
@@ -19,26 +18,19 @@ type Item = {
 };
 
 const statusColor: Record<string, string> = {
-  BARU: "bg-sky-100 text-sky-700",
-  DIBACA: "bg-slate-200 text-slate-700",
-  DIPROSES: "bg-amber-100 text-amber-800",
-  SELESAI: "bg-emerald-100 text-emerald-700",
+  BARU: "bg-sky-400/15 text-sky-300 ring-sky-400/30",
+  DIBACA: "bg-slate-400/15 text-slate-300 ring-slate-400/30",
+  DIPROSES: "bg-amber-400/15 text-amber-300 ring-amber-400/30",
+  SELESAI: "bg-emerald-400/15 text-emerald-300 ring-emerald-400/30",
 };
 
-const priorityColor: Record<string, string> = {
-  BIASA: "bg-slate-100 text-slate-600",
-  PENTING: "bg-orange-100 text-orange-700",
-  SANGAT_PENTING: "bg-red-100 text-red-700",
-};
-
-export default function AdminDashboard({ name }: { name: string }) {
+export default function AdminDashboard({ name, isSuper }: { name: string; isSuper: boolean }) {
   const router = useRouter();
   const [items, setItems] = useState<Item[]>([]);
   const [stats, setStats] = useState({ total: 0, baru: 0, diproses: 0, selesai: 0, arsip: 0 });
   const [tab, setTab] = useState<"aktif" | "arsip">("aktif");
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("");
-  const [priority, setPriority] = useState("");
   const [flaggedOnly, setFlaggedOnly] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -51,7 +43,6 @@ export default function AdminDashboard({ name }: { name: string }) {
       p.set("archived", tab === "arsip" ? "1" : "0");
       if (q) p.set("q", q);
       if (status) p.set("status", status);
-      if (priority) p.set("priority", priority);
       if (flaggedOnly) p.set("flagged", "1");
       const r = await fetch(`/api/admin/saran?${p.toString()}`, { cache: "no-store" });
       if (r.status === 401) {
@@ -67,7 +58,7 @@ export default function AdminDashboard({ name }: { name: string }) {
     } finally {
       setLoading(false);
     }
-  }, [q, status, priority, flaggedOnly, tab, router]);
+  }, [q, status, flaggedOnly, tab, router]);
 
   useEffect(() => {
     const t = setTimeout(load, q ? 400 : 0);
@@ -128,58 +119,68 @@ export default function AdminDashboard({ name }: { name: string }) {
     router.refresh();
   }
 
-  const sel = "rounded-lg border border-slate-600 bg-slate-800 px-2.5 py-2 text-sm text-white outline-none focus:border-emerald-400";
+  const sel =
+    "rounded-xl border border-white/10 bg-slate-800/80 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20";
 
   return (
-    <div className="min-h-full bg-slate-900 text-slate-100">
-      <header className="border-b border-slate-700">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-4">
+    <div className="admin-bg min-h-full text-slate-100">
+      <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-900/70 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3.5 sm:px-6">
           <div className="flex items-center gap-3">
-            <SchoolLogo className="h-9 w-9 rounded-lg bg-white object-contain" />
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 p-1.5 ring-1 ring-white/15">
+              <SchoolLogo className="h-full w-full" />
+            </span>
             <div>
-              <p className="text-xs uppercase tracking-widest text-slate-400">Dashboard OSIS</p>
-              <h1 className="text-lg font-extrabold">Kotak Saran Masuk</h1>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-emerald-300">
+                Dashboard OSIS
+              </p>
+              <h1 className="text-lg font-extrabold leading-tight">
+                Kotak Saran <span className="text-gradient-ocean">Masuk</span>
+              </h1>
             </div>
-            <OsisLogo className="h-9 w-9 rounded-lg bg-white object-contain" />
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <span className="hidden text-slate-300 sm:inline">Halo, {name}</span>
-            <Link href="/admin/akun" className="rounded-lg bg-emerald-700 px-3 py-2 font-semibold hover:bg-emerald-600">
-              Kelola Akun
+            <span className="hidden items-center gap-2 rounded-full bg-white/5 px-3 py-1.5 text-slate-200 ring-1 ring-white/10 sm:flex">
+              <span className="h-2 w-2 rounded-full bg-emerald-400" />
+              {name}
+            </span>
+            {isSuper && (
+              <Link
+                href="/admin/kelola"
+                className="rounded-xl bg-violet-500 px-3.5 py-2 font-bold text-white shadow-lg shadow-violet-900/40 transition hover:bg-violet-400"
+              >
+                👑 Kelola Admin
+              </Link>
+            )}
+            <Link
+              href="/admin/akun"
+              className="rounded-xl bg-emerald-500 px-3.5 py-2 font-bold text-white shadow-lg shadow-emerald-900/40 transition hover:bg-emerald-400"
+            >
+              ⚙️ Kelola Akun
             </Link>
-            <button onClick={logout} className="rounded-lg bg-slate-700 px-3 py-2 font-semibold hover:bg-slate-600">
+            <button
+              onClick={logout}
+              className="rounded-xl bg-white/10 px-3.5 py-2 font-semibold ring-1 ring-white/10 transition hover:bg-white/20"
+            >
               Keluar
             </button>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-6">
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {[
-            { label: "Total kritik/saran", value: stats.total },
-            { label: "Kritik baru", value: stats.baru },
-            { label: "Sedang ditangani", value: stats.diproses },
-            { label: "Selesai", value: stats.selesai },
-          ].map((s) => (
-            <div key={s.label} className="rounded-2xl bg-slate-800 p-4">
-              <p className="text-2xl font-extrabold">{s.value}</p>
-              <p className="text-xs text-slate-400">{s.label}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          <div className="flex rounded-xl bg-slate-800 p-1 text-sm font-semibold">
+      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+        {/* Tab + aksi arsip */}
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex rounded-2xl bg-white/5 p-1 text-sm font-bold ring-1 ring-white/10">
             <button
               onClick={() => setTab("aktif")}
-              className={`rounded-lg px-4 py-2 ${tab === "aktif" ? "bg-emerald-600 text-white" : "text-slate-300 hover:text-white"}`}
+              className={`rounded-xl px-4 py-2 transition ${tab === "aktif" ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow" : "text-slate-300 hover:text-white"}`}
             >
               Aktif ({stats.total})
             </button>
             <button
               onClick={() => setTab("arsip")}
-              className={`rounded-lg px-4 py-2 ${tab === "arsip" ? "bg-emerald-600 text-white" : "text-slate-300 hover:text-white"}`}
+              className={`rounded-xl px-4 py-2 transition ${tab === "arsip" ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow" : "text-slate-300 hover:text-white"}`}
             >
               Riwayat ({stats.arsip})
             </button>
@@ -188,27 +189,28 @@ export default function AdminDashboard({ name }: { name: string }) {
             <div className="ml-auto flex flex-wrap gap-2 text-sm">
               <button
                 onClick={() => archiveAll("selesai")}
-                className="rounded-lg bg-slate-700 px-3 py-2 font-semibold hover:bg-slate-600"
+                className="rounded-xl bg-white/10 px-3 py-2 font-semibold ring-1 ring-white/10 transition hover:bg-white/20"
               >
-                Arsipkan yang SELESAI
+                📦 Arsipkan yang SELESAI
               </button>
               <button
                 onClick={() => archiveAll("all")}
-                className="rounded-lg bg-slate-700 px-3 py-2 font-semibold hover:bg-slate-600"
+                className="rounded-xl bg-white/10 px-3 py-2 font-semibold ring-1 ring-white/10 transition hover:bg-white/20"
               >
-                Arsipkan semua
+                🗄️ Arsipkan semua
               </button>
             </div>
           )}
         </div>
 
-        <div className="mt-4 rounded-2xl bg-slate-800 p-4">
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+        {/* Filter */}
+        <div className="mt-3 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur">
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Cari isi kritik…"
-              className="rounded-lg border border-slate-600 bg-slate-900 px-2.5 py-2 text-sm outline-none focus:border-emerald-400 sm:col-span-2"
+              placeholder="🔍 Cari isi kritik…"
+              className="rounded-xl border border-white/10 bg-slate-800/80 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20 sm:col-span-2"
             />
             <select value={status} onChange={(e) => setStatus(e.target.value)} className={sel}>
               <option value="">Semua status</option>
@@ -216,15 +218,9 @@ export default function AdminDashboard({ name }: { name: string }) {
                 <option key={s.value} value={s.value}>{s.label}</option>
               ))}
             </select>
-            <select value={priority} onChange={(e) => setPriority(e.target.value)} className={sel}>
-              <option value="">Semua prioritas</option>
-              {PRIORITIES.map((p) => (
-                <option key={p.value} value={p.value}>{p.label}</option>
-              ))}
-            </select>
-            <label className="flex items-center gap-2 rounded-lg border border-slate-600 px-2.5 py-2 text-sm">
+            <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-white/10 bg-slate-800/80 px-3 py-2 text-sm">
               <input type="checkbox" checked={flaggedOnly} onChange={(e) => setFlaggedOnly(e.target.checked)} className="h-4 w-4 accent-emerald-500" />
-              Penting saja
+              ⭐ Penting saja
             </label>
           </div>
         </div>
@@ -235,30 +231,43 @@ export default function AdminDashboard({ name }: { name: string }) {
           </div>
         )}
 
+        {/* Daftar item */}
         <div className="mt-4 space-y-3">
-          {loading && <p className="text-sm text-slate-400">Memuat…</p>}
+          {loading && <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center text-sm text-slate-300">⏳ Memuat…</p>}
           {!loading && items.length === 0 && (
-            <p className="rounded-2xl bg-slate-800 p-6 text-center text-sm text-slate-400">
-              Belum ada kritik yang cocok dengan filter.
+            <p className="rounded-2xl border border-dashed border-white/15 bg-white/5 p-8 text-center text-sm text-slate-300">
+              {tab === "aktif"
+                ? "Belum ada kritik yang cocok dengan filter. 🎉"
+                : "Riwayat kosong. Kritik yang diarsipkan akan tampil di sini."}
             </p>
           )}
           {items.map((it) => (
-            <article key={it.id} className="rounded-2xl bg-slate-800 p-4">
+            <article
+              key={it.id}
+              className="animate-pop rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur transition hover:border-white/20"
+            >
               <div className="flex flex-wrap items-center gap-2 text-xs font-semibold">
-                <span className="rounded-md bg-slate-700 px-2 py-1 font-mono">{it.publicId}</span>
-                <span className={`rounded-md px-2 py-1 ${priorityColor[it.priority] ?? ""}`}>{priorityLabel(it.priority)}</span>
-                <span className={`rounded-md px-2 py-1 ${statusColor[it.status] ?? ""}`}>{statusLabel(it.status)}</span>
-                {it.isFlagged && <span className="rounded-md bg-yellow-300 px-2 py-1 text-yellow-900">Ditandai penting</span>}
+                <span className="rounded-lg bg-white/10 px-2 py-1 font-mono text-slate-100 ring-1 ring-white/10">
+                  {it.publicId}
+                </span>
+                <span className={`rounded-lg px-2 py-1 ring-1 ${statusColor[it.status] ?? ""}`}>
+                  {statusLabel(it.status)}
+                </span>
+                {it.isFlagged && (
+                  <span className="rounded-lg bg-yellow-300/20 px-2 py-1 text-yellow-200 ring-1 ring-yellow-300/30">
+                    ⭐ Ditandai penting
+                  </span>
+                )}
                 <span className="ml-auto font-normal text-slate-400">
-                  {new Date(it.createdAt).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" })}
+                  🕒 {new Date(it.createdAt).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" })}
                 </span>
               </div>
-              <p className="mt-2 whitespace-pre-wrap text-[15px] leading-relaxed">{it.message}</p>
+              <p className="mt-2.5 whitespace-pre-wrap text-[15px] leading-relaxed text-slate-100">{it.message}</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 <select
                   value={it.status}
                   onChange={(e) => patch(it.id, { status: e.target.value })}
-                  className="rounded-lg border border-slate-600 bg-slate-900 px-2.5 py-2 text-sm"
+                  className="rounded-xl border border-white/10 bg-slate-800 px-3 py-2 text-sm text-slate-100 outline-none focus:border-emerald-400"
                 >
                   {STATUSES.map((s) => (
                     <option key={s.value} value={s.value}>{s.label}</option>
@@ -266,37 +275,37 @@ export default function AdminDashboard({ name }: { name: string }) {
                 </select>
                 <button
                   onClick={() => patch(it.id, { isFlagged: !it.isFlagged })}
-                  className="rounded-lg bg-slate-700 px-3 py-2 text-sm font-semibold hover:bg-slate-600"
+                  className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold ring-1 ring-white/10 transition hover:bg-white/20"
                 >
-                  {it.isFlagged ? "Batalkan tanda" : "Tandai penting"}
+                  {it.isFlagged ? "Batal tanda" : "⭐ Tandai penting"}
                 </button>
                 {tab === "aktif" ? (
                   <button
                     onClick={() => patch(it.id, { archived: true })}
-                    className="rounded-lg bg-slate-700 px-3 py-2 text-sm font-semibold hover:bg-slate-600"
+                    className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold ring-1 ring-white/10 transition hover:bg-white/20"
                   >
-                    Arsipkan
+                    📦 Arsipkan
                   </button>
                 ) : (
                   <button
                     onClick={() => patch(it.id, { archived: false })}
-                    className="rounded-lg bg-slate-700 px-3 py-2 text-sm font-semibold hover:bg-slate-600"
+                    className="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold ring-1 ring-white/10 transition hover:bg-white/20"
                   >
-                    Kembalikan
+                    ↩️ Kembalikan
                   </button>
                 )}
                 <button
                   onClick={() => remove(it.id)}
-                  className="rounded-lg bg-red-900/60 px-3 py-2 text-sm font-semibold text-red-200 hover:bg-red-900"
+                  className="rounded-xl bg-rose-500/20 px-3 py-2 text-sm font-semibold text-rose-200 ring-1 ring-rose-400/30 transition hover:bg-rose-500/40"
                 >
-                  Hapus
+                  🗑️ Hapus
                 </button>
               </div>
             </article>
           ))}
         </div>
-        <p className="mt-6 text-center text-xs text-slate-500">
-          Data pengirim tidak ditampilkan — halaman ini hanya berisi kritik anonim.
+        <p className="mt-6 text-center text-xs text-slate-400">
+          🔒 Data pengirim tidak ditampilkan — halaman ini hanya berisi kritik anonim.
         </p>
       </main>
     </div>

@@ -66,7 +66,7 @@ export default function AccountsManager() {
       }
       const d = await r.json();
       if (!r.ok) throw new Error(d.error ?? "Gagal mereset.");
-      setNotice(`${d.reset} akun berhasil dibuka jatahnya. Akun tersebut bisa kirim lagi.`);
+      setNotice(`✅ ${d.reset} akun berhasil dibuka jatahnya. Akun tersebut bisa kirim lagi.`);
       load();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Gagal mereset.");
@@ -78,40 +78,40 @@ export default function AccountsManager() {
   return (
     <div className="mt-4 space-y-4">
       <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-2xl bg-slate-800 p-4">
-          <p className="text-2xl font-extrabold">{stats.total}</p>
-          <p className="text-xs text-slate-400">Total akun pernah login</p>
+        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-sky-500/25 to-sky-600/15 p-4 backdrop-blur">
+          <p className="text-3xl font-extrabold">{stats.total}</p>
+          <p className="mt-1 text-xs font-medium text-slate-300">👤 Total akun pernah login</p>
         </div>
-        <div className="rounded-2xl bg-slate-800 p-4">
-          <p className="text-2xl font-extrabold">{stats.used}</p>
-          <p className="text-xs text-slate-400">Sudah pakai jatah</p>
+        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-amber-500/25 to-orange-500/15 p-4 backdrop-blur">
+          <p className="text-3xl font-extrabold">{stats.used}</p>
+          <p className="mt-1 text-xs font-medium text-slate-300">✅ Sudah pakai jatah</p>
         </div>
       </div>
 
-      <div className="rounded-2xl bg-slate-800 p-4">
-        <h2 className="font-bold">Periode / acara baru</h2>
-        <p className="mt-1 text-sm text-slate-400">
+      <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-emerald-500/15 to-teal-500/10 p-4 backdrop-blur">
+        <h2 className="font-[family-name:var(--font-play)] text-lg font-extrabold text-emerald-200">
+          🗓️ Periode / acara baru
+        </h2>
+        <p className="mt-1 text-sm text-slate-300">
           Buka kembali jatah SEMUA akun sekaligus. Kritik lama tidak ikut terhapus
           (pindahkan dulu ke Riwayat dari dashboard bila perlu).
         </p>
         <button
           disabled={busy || stats.used === 0}
-          onClick={() =>
-            reset({ all: true }, "Buka jatah SEMUA akun? Semua akun bisa kirim lagi.")
-          }
-          className="mt-3 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={() => reset({ all: true }, "Buka jatah SEMUA akun? Semua akun bisa kirim lagi.")}
+          className="mt-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 px-5 py-2.5 text-sm font-extrabold text-white shadow-lg shadow-emerald-900/40 transition hover:brightness-110 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {busy ? "Memproses…" : "Reset semua jatah"}
+          {busy ? "Memproses… ⏳" : "🔄 Reset semua jatah"}
         </button>
       </div>
 
       {error && <Alert kind="error">{error}</Alert>}
       {notice && <Alert kind="success">{notice}</Alert>}
 
-      <div className="overflow-x-auto rounded-2xl bg-slate-800">
-        <table className="w-full min-w-[560px] text-left text-sm">
+      <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur">
+        <table className="w-full min-w-[620px] text-left text-sm">
           <thead>
-            <tr className="border-b border-slate-700 text-xs uppercase tracking-wide text-slate-400">
+            <tr className="border-b border-white/10 text-xs uppercase tracking-wide text-slate-400">
               <th className="px-4 py-3">Kode akun</th>
               <th className="px-4 py-3">Status jatah</th>
               <th className="px-4 py-3">Terpakai</th>
@@ -121,19 +121,23 @@ export default function AccountsManager() {
           </thead>
           <tbody>
             {loading && (
-              <tr><td colSpan={5} className="px-4 py-6 text-center text-slate-400">Memuat…</td></tr>
+              <tr><td colSpan={5} className="px-4 py-6 text-center text-slate-400">⏳ Memuat…</td></tr>
             )}
             {!loading && accounts.length === 0 && (
               <tr><td colSpan={5} className="px-4 py-6 text-center text-slate-400">Belum ada akun.</td></tr>
             )}
             {accounts.map((a) => (
-              <tr key={a.id} className="border-b border-slate-700/50 last:border-0">
-                <td className="px-4 py-3 font-mono font-bold">{a.displayCode ?? "—"}</td>
+              <tr key={a.id} className="border-b border-white/5 last:border-0 hover:bg-white/5">
+                <td className="px-4 py-3 font-mono font-bold text-emerald-300">{a.displayCode ?? "—"}</td>
                 <td className="px-4 py-3">
                   {a.isUsed ? (
-                    <span className="rounded-md bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-800">Sudah kirim</span>
+                    <span className="rounded-lg bg-amber-400/15 px-2 py-1 text-xs font-bold text-amber-200 ring-1 ring-amber-400/30">
+                      Sudah kirim
+                    </span>
                   ) : (
-                    <span className="rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-800">Belum kirim</span>
+                    <span className="rounded-lg bg-emerald-400/15 px-2 py-1 text-xs font-bold text-emerald-200 ring-1 ring-emerald-400/30">
+                      Belum kirim
+                    </span>
                   )}
                 </td>
                 <td className="px-4 py-3 text-slate-300">{fmt(a.usedAt)}</td>
@@ -141,10 +145,8 @@ export default function AccountsManager() {
                 <td className="px-4 py-3 text-right">
                   <button
                     disabled={busy || !a.isUsed}
-                    onClick={() =>
-                      reset({ ids: [a.id] }, `Buka jatah akun ${a.displayCode ?? ""}?`)
-                    }
-                    className="rounded-lg bg-slate-700 px-3 py-1.5 text-xs font-semibold hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-40"
+                    onClick={() => reset({ ids: [a.id] }, `Buka jatah akun ${a.displayCode ?? ""}?`)}
+                    className="rounded-lg bg-white/10 px-3 py-1.5 text-xs font-bold ring-1 ring-white/10 transition hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     Reset
                   </button>
@@ -154,8 +156,8 @@ export default function AccountsManager() {
           </tbody>
         </table>
       </div>
-      <p className="text-center text-xs text-slate-500">
-        Minta siswa menyebutkan kode akunnya untuk reset per akun. Email tidak disimpan &amp; tidak ditampilkan.
+      <p className="text-center text-xs text-slate-400">
+        🔒 Minta siswa menyebutkan kode akunnya untuk reset per akun. Email tidak disimpan &amp; tidak ditampilkan.
       </p>
     </div>
   );

@@ -87,3 +87,17 @@ Nama sekolah diatur via `NEXT_PUBLIC_SCHOOL_NAME` di `.env`
 - Rate limiting login & pengiriman, penolakan isi yang memuat email/nomor/URL identitas.
 - State CSRF (`oauth_state` httpOnly, 10 menit) untuk alur OAuth Google.
 - Security headers (nosniff, DENY frame, referrer policy).
+
+## Banyak admin (Super Admin)
+
+- Login admin dibuat dari env saat seed (`ADMIN_USERNAME/PASSWORD/NAME`) dan otomatis menjadi
+  **super admin** (bisa diatur ulang via `SUPER_ADMIN_USERNAME` di `.env`).
+- Super admin melihat tombol **"Kelola Admin"** di dashboard (halaman `/admin/kelola`) untuk
+  menambah, mengubah nama/password, atau menghapus admin lain. Admin biasa tidak melihat tombol itu
+  dan tidak bisa mengakses halaman tersebut.
+- Hanya **satu super admin**; akun super tidak bisa dihapus (melindungi dari kehilangan akses).
+- Menandai ulang siapa super admin secara manual (mis. jika username super berubah):
+  ```bash
+  npm run db:set-super   # memakai SUPER_ADMIN_USERNAME (default = ADMIN_USERNAME)
+  ```
+

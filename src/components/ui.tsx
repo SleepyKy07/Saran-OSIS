@@ -3,24 +3,38 @@ import type { ReactNode } from "react";
 import { SCHOOL_NAME } from "@/lib/constants";
 import { OsisLogo, SchoolLogo } from "./school-logo";
 
+/* ============================================================
+   Elemen dasar UI bertema ceria & ramah siswa
+   ============================================================ */
+
 export function SiteHeader({ right }: { right?: ReactNode }) {
   return (
-    <header className="border-b border-slate-200 bg-white/80 backdrop-blur">
-      <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-4">
-        <Link href="/" className="flex items-center gap-3">
+    <header className="relative z-10 border-b border-white/60 bg-white/70 backdrop-blur-md">
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3.5 sm:px-6">
+        <Link href="/" className="group flex items-center gap-3">
           <SchoolLogo />
           <span>
-            <span className="block text-xs font-medium uppercase tracking-wide text-slate-500">
+            <span className="block text-[11px] font-bold uppercase tracking-widest text-amber-600">
               {SCHOOL_NAME}
             </span>
-            <span className="block text-base font-bold text-slate-900">
-              Kotak Saran Digital OSIS
+            <span className="block text-base font-extrabold leading-tight text-slate-800">
+              Kotak Saran <span className="text-emerald-600">OSIS</span>
             </span>
           </span>
         </Link>
-        <nav className="flex items-center gap-2 text-sm">
+        <nav className="flex items-center gap-1.5 text-sm">
           {right}
-          <OsisLogo />
+          <div className="flex items-center gap-2 pl-1">
+            <OsisLogo />
+            <span className="leading-tight">
+              <span className="block text-xs font-extrabold uppercase tracking-wide text-slate-800">
+                OSIS
+              </span>
+              <span className="hidden text-[10px] font-bold uppercase tracking-wider text-amber-600 sm:block">
+                {SCHOOL_NAME}
+              </span>
+            </span>
+          </div>
         </nav>
       </div>
     </header>
@@ -29,7 +43,9 @@ export function SiteHeader({ right }: { right?: ReactNode }) {
 
 export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`rounded-2xl border border-slate-200 bg-white p-5 shadow-sm ${className}`}>
+    <div
+      className={`card-fun animate-pop rounded-3xl p-5 sm:p-6 ${className}`}
+    >
       {children}
     </div>
   );
@@ -38,34 +54,70 @@ export function Card({ children, className = "" }: { children: ReactNode; classN
 export function Alert({ kind, children }: { kind: "error" | "success" | "info"; children: ReactNode }) {
   const styles =
     kind === "error"
-      ? "border-red-200 bg-red-50 text-red-800"
+      ? "border-rose-200 bg-rose-50 text-rose-800"
       : kind === "success"
         ? "border-emerald-200 bg-emerald-50 text-emerald-800"
         : "border-sky-200 bg-sky-50 text-sky-800";
-  return <div className={`rounded-xl border px-4 py-3 text-sm ${styles}`}>{children}</div>;
+  return (
+    <div className={`flex items-start gap-2.5 rounded-2xl border px-4 py-3 text-sm font-medium ${styles}`}>
+      <span className="mt-0.5" aria-hidden="true">
+        {kind === "error" ? "⚠️" : kind === "success" ? "✅" : "💡"}
+      </span>
+      <div className="flex-1">{children}</div>
+    </div>
+  );
 }
 
 export function FieldLabel({ children }: { children: ReactNode }) {
-  return <label className="mb-1.5 block text-sm font-semibold text-slate-700">{children}</label>;
+  return (
+    <label className="mb-1.5 block text-sm font-bold text-slate-700">
+      <span className="mr-1" aria-hidden="true">✏️</span>
+      {children}
+    </label>
+  );
 }
 
 export const inputCls =
-  "w-full rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-[15px] text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100";
+  "w-full rounded-2xl border-2 border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100";
 
 export function PrimaryButton({
   children,
   disabled,
+  className = "",
 }: {
   children: ReactNode;
   disabled?: boolean;
+  className?: string;
 }) {
   return (
     <button
       type="submit"
       disabled={disabled}
-      className="w-full rounded-xl bg-emerald-600 px-4 py-3.5 text-[15px] font-bold text-white transition hover:bg-emerald-700 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+      className={`btn-play w-full rounded-2xl px-4 py-3.5 text-[15px] font-extrabold text-white active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-none ${className}`}
     >
       {children}
     </button>
+  );
+}
+
+/* ============================================================
+   Doodles & blob dekoratif utk latar halaman siswa
+   ============================================================ */
+export function ConfettiBlob({ className = "" }: { className?: string }) {
+  return (
+    <div aria-hidden="true" className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}>
+      {/* bintang / dot yang mengambang */}
+      <span className="animate-floaty absolute left-[6%] top-[8%] text-3xl opacity-80">⭐</span>
+      <span className="animate-floaty2 absolute left-[88%] top-[6%] text-4xl opacity-70">🌈</span>
+      <span className="animate-floaty delay-2 absolute left-[82%] top-[38%] text-2xl opacity-70">💬</span>
+      <span className="animate-floaty2 delay-1 absolute left-[4%] top-[55%] text-3xl opacity-70">✍️</span>
+      <span className="animate-floaty delay-3 absolute left-[90%] bottom-[12%] text-3xl opacity-70">🎉</span>
+      <span className="animate-floaty2 delay-2 absolute left-[10%] bottom-[8%] text-2xl opacity-60">🌟</span>
+      {/* blob warna bulat */}
+      <span className="animate-floaty absolute left-[15%] top-[22%] h-6 w-6 rounded-full bg-amber-300/50 blur-[1px]" />
+      <span className="animate-floaty2 delay-1 absolute left-[70%] top-[20%] h-8 w-8 rounded-full bg-sky-300/40" />
+      <span className="animate-floaty delay-2 absolute bottom-[22%] left-[55%] h-5 w-5 rounded-full bg-rose-300/40" />
+      <span className="animate-floaty2 delay-3 absolute left-[40%] top-[12%] h-4 w-4 rounded-full bg-emerald-300/50" />
+    </div>
   );
 }

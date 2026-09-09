@@ -10,7 +10,14 @@ export async function requireAdmin() {
   if (!aid) return null;
   const admin = await prisma.admin.findUnique({
     where: { id: aid },
-    select: { id: true, username: true, name: true },
+    select: { id: true, username: true, name: true, isSuper: true },
   });
+  return admin;
+}
+
+// Hanya super admin yang boleh memanggil. Mengembalikan objek super, atau null.
+export async function requireSuperAdmin() {
+  const admin = await requireAdmin();
+  if (!admin?.isSuper) return null;
   return admin;
 }

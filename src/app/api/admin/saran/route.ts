@@ -3,9 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin-auth";
 import { clientIp, rateLimit } from "@/lib/ratelimit";
 import { archiveScopeSchema } from "@/lib/validation";
-import { PRIORITIES, STATUSES } from "@/lib/constants";
+import { STATUSES } from "@/lib/constants";
 
-const pris = new Set(PRIORITIES.map((p) => p.value));
 const stats = new Set(STATUSES.map((s) => s.value));
 
 export async function GET(req: Request) {
@@ -15,7 +14,6 @@ export async function GET(req: Request) {
   const url = new URL(req.url);
   const q = (url.searchParams.get("q") ?? "").trim().slice(0, 100);
   const status = url.searchParams.get("status") ?? "";
-  const priority = url.searchParams.get("priority") ?? "";
   const flagged = url.searchParams.get("flagged") ?? "";
   // Tab dashboard: "0" = Aktif (default), "1" = Arsip/Riwayat, "all" = keduanya.
   const archivedParam = url.searchParams.get("archived") ?? "0";
@@ -26,7 +24,6 @@ export async function GET(req: Request) {
     where: {
       ...(archivedFilter === undefined ? {} : { archived: archivedFilter }),
       ...(status && stats.has(status as never) ? { status: status as never } : {}),
-      ...(priority && pris.has(priority as never) ? { priority: priority as never } : {}),
       ...(flagged === "1" ? { isFlagged: true } : {}),
       ...(q ? { message: { contains: q, mode: "insensitive" } } : {}),
     },
@@ -34,7 +31,6 @@ export async function GET(req: Request) {
       id: true,
       publicId: true,
       message: true,
-      priority: true,
       status: true,
       isFlagged: true,
       archived: true,

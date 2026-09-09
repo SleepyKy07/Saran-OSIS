@@ -1,1 +1,109 @@
 @import "tailwindcss";
+
+/* ============================================================
+   Kotak Saran Digital OSIS — Tema ceria & ramah siswa
+   Tailwind v4 (config via CSS). Utility kustom + animasi.
+   ============================================================ */
+
+@theme {
+  /* Warna aksen playful */
+  --color-mint: #34d399;
+  --color-coral: #fb7185;
+  --color-grape: #a78bfa;
+}
+
+/* ---- Latar dekoratif halaman siswa (gradien pastel lembut) ---- */
+.siswa-bg {
+  background-color: #fdf8f0;
+  background-image:
+    radial-gradient(at 8% 12%, rgba(253, 224, 71, 0.28) 0px, transparent 45%),
+    radial-gradient(at 92% 8%, rgba(56, 189, 248, 0.22) 0px, transparent 45%),
+    radial-gradient(at 88% 92%, rgba(52, 211, 153, 0.25) 0px, transparent 45%),
+    radial-gradient(at 4% 85%, rgba(251, 113, 133, 0.20) 0px, transparent 45%);
+}
+
+/* ---- Latar login admin (gradien gelap ke ungu/biru) ---- */
+.admin-bg {
+  background-image:
+    radial-gradient(at 15% 20%, rgba(167, 139, 250, 0.30) 0px, transparent 50%),
+    radial-gradient(at 85% 15%, rgba(56, 189, 248, 0.22) 0px, transparent 50%),
+    linear-gradient(135deg, #0f172a 0%, #1e1b4b 55%, #172554 100%);
+}
+
+/* ---- Gerakan pelan & mengambang utk blob dekoratif ---- */
+@keyframes floaty {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-16px) rotate(6deg); }
+}
+@keyframes floaty2 {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(12px) rotate(-8deg); }
+}
+@keyframes pop-in {
+  0%   { opacity: 0; transform: translateY(14px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-4deg); }
+  50%      { transform: rotate(4deg); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-floaty   { animation: floaty 7s ease-in-out infinite; }
+.animate-floaty2  { animation: floaty2 9s ease-in-out infinite; }
+.animate-pop      { animation: pop-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-wiggle   { animation: wiggle 3s ease-in-out infinite; }
+
+/* Penundaan utk efek bertahap */
+.delay-1 { animation-delay: 0.08s; }
+.delay-2 { animation-delay: 0.16s; }
+.delay-3 { animation-delay: 0.24s; }
+.delay-4 { animation-delay: 0.32s; }
+
+/* ---- Kartu glass / ceria ---- */
+.card-fun {
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow:
+    0 1px 2px rgba(30, 41, 59, 0.04),
+    0 12px 30px -12px rgba(30, 41, 59, 0.18);
+}
+
+/* ---- Heading gradient teks ---- */
+.text-gradient-play {
+  background-image: linear-gradient(100deg, #f59e0b, #ef4444 30%, #a855f7 60%, #2563eb 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Teks gradien emerald→sky utk beberapa heading admin */
+.text-gradient-ocean {
+  background-image: linear-gradient(100deg, #10b981, #0ea5e9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---- Tombol gradien cerah ---- */
+.btn-play {
+  background-image: linear-gradient(100deg, #f59e0b, #fb7185 55%, #a855f7);
+  background-size: 150% 100%;
+  transition: background-position 0.4s ease, transform 0.15s ease, box-shadow 0.3s ease;
+  box-shadow: 0 10px 20px -8px rgba(217, 119, 6, 0.55);
+}
+.btn-play:hover {
+  background-position: 100% 0;
+  transform: translateY(-2px);
+  box-shadow: 0 16px 26px -10px rgba(217, 119, 6, 0.65);
+}
+
+/* ---- Selection warna ceria ---- */
+::selection {
+  background: #fde68a;
+  color: #78350f;
+}

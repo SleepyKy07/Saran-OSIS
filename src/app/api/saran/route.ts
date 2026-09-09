@@ -42,11 +42,11 @@ export async function POST(req: Request) {
       const student = await tx.student.findUnique({ where: { id: sid } });
       if (!student || student.isUsed) throw new Error("USED");
       // Kritik disimpan TANPA relasi ke identitas siswa mana pun.
+      // Prioritas ditentukan oleh admin; semua kiriman baru default "BIASA".
       await tx.suggestion.create({
         data: {
           publicId: `KS-${publicIdGen()}`,
           message,
-          priority: parsed.data.priority,
         },
       });
       await tx.student.update({
