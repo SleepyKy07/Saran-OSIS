@@ -4,6 +4,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  // Runtime aplikasi memakai URL pooler (banyak koneksi sekaligus di serverless).
+  // Koneksi langsung untuk migrasi diatur di prisma.config.ts (directUrl).
   url      = env("DATABASE_URL")
 }
 
