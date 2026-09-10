@@ -55,7 +55,7 @@ export async function POST(req: Request) {
   if (!(await requireAdmin())) {
     return NextResponse.json({ error: "Tidak terautentikasi." }, { status: 401 });
   }
-  if (!rateLimit(`arsip:${clientIp(req)}`, 10, 60_000)) {
+  if (!(await rateLimit(`arsip:${clientIp(req)}`, 10, 60_000))) {
     return NextResponse.json({ error: "Terlalu banyak percobaan. Coba lagi semenit." }, { status: 429 });
   }
   let body: unknown;

@@ -7,7 +7,7 @@ import { clientIp, rateLimit } from "@/lib/ratelimit";
 import { adminLoginSchema } from "@/lib/validation";
 
 export async function POST(req: Request) {
-  if (!rateLimit(`admin-login:${clientIp(req)}`, 8, 60_000)) {
+  if (!(await rateLimit(`admin-login:${clientIp(req)}`, 8, 60_000))) {
     return NextResponse.json({ error: "Terlalu banyak percobaan. Coba lagi semenit." }, { status: 429 });
   }
   let body: unknown;

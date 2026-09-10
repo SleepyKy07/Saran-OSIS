@@ -1,5 +1,3 @@
-import { setTimeout as sleep } from "node:timers/promises";
-
 const URL = "https://kotak-saran-osis.vercel.app/api/siswa/status";
 const N = 60; // jumlah request bersamaan
 

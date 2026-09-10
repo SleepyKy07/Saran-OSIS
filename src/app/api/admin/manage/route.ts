@@ -29,7 +29,7 @@ export async function POST(req: Request) {
   if (!me) {
     return NextResponse.json({ error: "Hanya super admin yang berhak." }, { status: 403 });
   }
-  if (!rateLimit(`admin-create:${clientIp(req)}`, 10, 60_000)) {
+  if (!(await rateLimit(`admin-create:${clientIp(req)}`, 10, 60_000))) {
     return NextResponse.json({ error: "Terlalu banyak percobaan. Coba lagi semenit." }, { status: 429 });
   }
   let body: unknown;

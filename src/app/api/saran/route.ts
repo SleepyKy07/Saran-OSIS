@@ -11,7 +11,7 @@ import { suggestionSchema } from "@/lib/validation";
 const publicIdGen = customAlphabet("ABCDEFGHJKLMNPQRSTUVWXYZ23456789", 6);
 
 export async function POST(req: Request) {
-  if (!rateLimit(`kirim:${clientIp(req)}`, 5, 60_000)) {
+  if (!(await rateLimit(`kirim:${clientIp(req)}`, 5, 60_000))) {
     return NextResponse.json({ error: "Terlalu banyak percobaan. Coba lagi semenit." }, { status: 429 });
   }
   const store = await cookies();

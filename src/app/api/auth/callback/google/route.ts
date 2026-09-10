@@ -21,7 +21,7 @@ function homeWithError(req: NextRequest, message: string) {
 // simpan HANYA hash sub -> buat sesi siswa -> redirect ke "/".
 // Nilai mentah `sub`/email TIDAK disimpan di DB (tetap anonim ke admin).
 export async function GET(req: NextRequest) {
-  if (!rateLimit(`google-callback:${clientIp(req)}`, 20, 60_000)) {
+  if (!(await rateLimit(`google-callback:${clientIp(req)}`, 20, 60_000))) {
     return homeWithError(req, "Terlalu banyak percobaan. Coba lagi semenit.");
   }
 
