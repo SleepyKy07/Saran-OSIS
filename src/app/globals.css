@@ -125,6 +125,15 @@
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
+
+  /* Di HP, animasi mengambang terus-menerus memaksa repaint tiap frame
+     (berat saat scroll pada halaman panjang). Matikan; dekorasi tetap tampil
+     sebagai elemen statis yang manis. */
+  .animate-floaty,
+  .animate-floaty2,
+  .animate-wiggle {
+    animation: none !important;
+  }
 }
 
 /* Hormati preferensi pengguna: matikan animasi dekoratif bila diminta.
@@ -139,11 +148,4 @@
   * {
     scroll-behavior: auto !important;
   }
-}
-
-/* Elemen dekoratif yang beranimasi terus-menerus: beri petunjuk ke GPU
-   agar tidak memicu layout ulang tiap frame. */
-.animate-floaty,
-.animate-floaty2 {
-  will-change: transform;
 }
