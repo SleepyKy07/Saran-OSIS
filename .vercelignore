@@ -1,0 +1,19 @@
+# Jangan pernah unggah file rahasia/lingkungan ke build Vercel.
+# Deploy harus memakai Environment Variables dari dashboard Vercel,
+# bukan file .env lokal.
+.env
+.env.*
+!.env.example
+
+# Artefak lokal
+.vercel
+node_modules
+.next
+tsconfig.tsbuildinfo
+*.log
+
+# Catatan/agent lokal
+.agents
+.claude
+.cursor
+.devin
