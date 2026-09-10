@@ -17,3 +17,6 @@ tsconfig.tsbuildinfo
 .claude
 .cursor
 .devin
+
+# Backup logo asli
+public/_logo-original/

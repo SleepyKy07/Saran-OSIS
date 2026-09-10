@@ -51,3 +51,6 @@ next-env.d.ts
 
 
 .vercel
+
+# Backup logo asli (jangan di-commit/deploy)
+public/_logo-original/

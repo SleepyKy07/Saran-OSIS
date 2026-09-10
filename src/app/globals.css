@@ -107,3 +107,43 @@
   background: #fde68a;
   color: #78350f;
 }
+
+/* ============================================================
+   Optimasi performa (terutama HP kelas menengah/bawah)
+   ============================================================ */
+
+/* Efek blur (backdrop-filter) berat saat scroll di HP.
+   Di layar kecil, matikan blur dan pakai latar solid yang setara. */
+@media (max-width: 640px) {
+  .card-fun {
+    backdrop-filter: none;
+    background: rgba(255, 255, 255, 0.96);
+  }
+  .backdrop-blur,
+  .backdrop-blur-md,
+  .backdrop-blur-sm {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}
+
+/* Hormati preferensi pengguna: matikan animasi dekoratif bila diminta.
+   Menghemat baterai & CPU, serta membantu pengguna yang sensitif gerakan. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-floaty,
+  .animate-floaty2,
+  .animate-wiggle,
+  .animate-pop {
+    animation: none !important;
+  }
+  * {
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Elemen dekoratif yang beranimasi terus-menerus: beri petunjuk ke GPU
+   agar tidak memicu layout ulang tiap frame. */
+.animate-floaty,
+.animate-floaty2 {
+  will-change: transform;
+}

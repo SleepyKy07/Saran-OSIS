@@ -22,11 +22,15 @@ export function SmartLogo({
   if (idx >= candidates.length) return <>{fallback}</>;
   // Sengaja <img>, bukan next/image: src bertingkat (png -> jpg -> fallback)
   // dengan onError tidak didukung penuh oleh optimizer untuk file opsional.
+  // width/height mencegah layout shift (CLS); decoding async agar tak memblokir render.
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={candidates[idx]}
       alt={alt}
+      width={128}
+      height={128}
+      decoding="async"
       draggable={false}
       onError={() => setIdx((i) => i + 1)}
       className={className ?? "h-10 w-10 rounded-xl bg-white object-contain"}
